@@ -1,6 +1,32 @@
+import psycopg2 as pg
+from psycopg2 import Error
 from connect import conn, encerra_conn
 from populando_faker import gerar_dados_aleatorios, inserir_dados
 
+def verificar_matricula (cursor, matricula_aluno):
+    try:
+
+        mat = "select COUNT(*) from aluno where matricula_aluno = %s;"
+        cursor.execute(mat, (matricula_aluno,))
+        valor = cursor.fetchone()[0]
+        return valor > 0
+
+    except pg.Error as e:
+        print("Erro ao verificar matricula")
+        return False
+
+def verificar_disciplina(cursor, codigo_disciplina):
+
+    try:
+
+        disc = "select COUNT(*) from disciplina where codigo_disciplina = %s;"
+        cursor.execute(disc, (codigo_disciplina,))
+        valor = cursor.fetchone()[0]
+        return valor > 0
+
+    except pg.Error as e:
+        print("Erro ao verificar disciplina")
+        return False
 
 def main():
 
@@ -51,7 +77,44 @@ def main():
         print()
 
         if num == 1:
-            print("Vamos realizar sua matricula simulada")
+            print("Vamos realizar sua matricula simulada\n")
+            print("Primeiro vamos verificar se a disciplina escolhida tem pré-requisitos!\n")
+            print("Por favor, digite a matricula do aluno: (ex.: 9999999)\n")
+            rga = input().strip()
+            while True:
+                if verificar_matricula(cursor, rga):
+                    print("\nMatricula válida!")
+                    break
+                else:
+                    print("A matricula não existe, digite novamente...")
+                    rga = input().strip()
+            
+            print("\nPor favor, dgite o codigo da disciplina: (ex.: ABCD123)")
+            cod = input().strip()
+            while True:
+                if verificar_disciplina(cursor, cod):
+                    print("\nCódigo de disciplina válido")
+                    break
+                else:
+                    print("Código de disciplina inválido, digite novamente...")
+                    cod = input().strip()
+            
+            try:
+                cursor.execute("""select codigo_disciplina_pre_requisito from verificar_pre_requisitos(%s, %s);""", (rga, cod))
+                resultado = cursor.fetchall()
+                pre_requisito = [linha[0] for linha in resultado]
+
+                if not pre_requisito:
+                    print("O aluno cumpriu todos os pré-requisitos para a disciplina informada")
+                    return True
+                else:
+                    print("O aluno tem pré-requisitos a cursar antes da disciplina informada")
+                    for pre in pre_requisito:
+                        print("- {}".format(pre))
+                    return False
+            except pg.Error as e:
+                print("Erro ao verificar pré-requititos")
+                return []
         elif num == 2:
             print("Mostrando suas disciplinas recomendadas")
         elif num == 3:
