@@ -1,8 +1,20 @@
 import psycopg2 as pg
 from psycopg2 import Error
+from psycopg2 import sql
 from connect import conn, encerra_conn
 from populando_faker import gerar_dados_aleatorios, inserir_dados
 
+def povoar(cursor, tabela):
+    """
+    Função para verificar se o banco de dados já foi povoado com a API Faker
+    """
+    try:
+        cursor.execute(sql.SQL("""select count(*) from {};""").format(sql.Identifier(tabela)))
+        contador = cursor.fetchone()[0]
+        return contador == 0
+    except pg.Error as e:
+        print(f"Erro ao verificar se o bando de dados está povoado: {e}")
+        return False
 
 def verificar_matricula (cursor, matricula_aluno):
     try:
@@ -297,23 +309,22 @@ def main():
 
     # Exibindo a qual banco de dados estamos conectados
     print("Conectado ao Banco de Dados: ", rows[0])
-    print()
-
-    #Gerando e Inserindo os Dados Aleatórios
-    ###########################################################################################################
-    """
-
-    print("Gerando Dados Aleatorios")
-
-    alunos, disciplinas, prerequisitos, turmas, horarios, matriculas, historico = gerar_dados_aleatorios()
-
-    print("\nInserindo dados\n")
-
-    inserir_dados(conexao, alunos, disciplinas, prerequisitos,
-                  turmas, horarios, matriculas, historico)
     
-    """
-    ############################################################################################################
+
+    if povoar (cursor, "aluno"):
+        print("O banco de dados está vazio, vamos iniciar a povoa-lo")
+        print("Gerando Dados Aleatorios")
+        alunos, disciplinas, prerequisitos, turmas, horarios, matriculas, historico = gerar_dados_aleatorios()
+        print("Dados gerados com sucesso")
+        print("Inserindo dados aleatórios!")
+        inserir_dados(conexao, alunos, disciplinas, prerequisitos,
+                  turmas, horarios, matriculas, historico)
+    else:
+        print("\nO Banco de Dados já contém dados!")
+        print("O povoamento do Banco de Dados foi pulado!")
+        print("- " * 50)
+        print()
+        
     num = -1
 
     while num != 0:
@@ -334,11 +345,11 @@ def main():
 
         if num == 1:
             inserir_novo_aluno(cursor, conexao)
-            print("-"*10)
+            print("- "*50)
         
         elif num == 2:
             fazer_matricula(cursor, conexao)
-            print("-"*10)
+            print("- "*50)
 
         elif num == 3:
             disciplinas_recomendadas(cursor)
