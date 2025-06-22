@@ -6,7 +6,7 @@ def relatorio_grade_horaria_individual(cursor):
         alunos = cursor.fetchall()
 
         if not alunos:
-            print("Nenhum aluno encontrado no sistema.")
+            print("Nenhum aluno encontrado no sistema")
             return
 
         for aluno in alunos:
@@ -23,7 +23,7 @@ def relatorio_grade_horaria_individual(cursor):
             grade = cursor.fetchall()
 
             if not grade:
-                print("Nenhuma disciplina matriculada.")
+                print("Nenhuma disciplina matriculada")
             else:
                 for nome, dia, ini, fim in grade:
                     print("{:<30} {:<15} {:<10} {:<10}".format(nome, dia, str(ini), str(fim)))
