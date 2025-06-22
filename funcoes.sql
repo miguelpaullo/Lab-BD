@@ -92,7 +92,7 @@ CREATE OR REPLACE FUNCTION disciplinas_procuradas()
 RETURNS TABLE(nome_disciplina varchar, total_matriculas int) AS $$
 BEGIN
     RETURN QUERY
-    SELECT d.nome, COUNT(*) AS total_matriculas
+    SELECT d.nome, COUNT(*)::int AS total_matriculas
     FROM matricula m
     JOIN turmas t ON m.id_turma = t.id_turma
     JOIN disciplina d ON t.codigo_disciplina = d.codigo_disciplina

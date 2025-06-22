@@ -327,6 +327,120 @@ def relatorio_alunos_aptos_estagio_tcc(cursor):
     except Exception as e:
         print(f"Ocorreu um erro inesperado: {e}")
 
+def disciplinas_mais_menos_procuradas(cursor):
+    print("\tGerando Relatório das disciplinas mais e menos procuradas")
+
+    try:
+        cursor.execute("""select nome_disciplina, total_matriculas from disciplinas_procuradas();""")
+        disciplinas_dados = cursor.fetchall()
+
+        if not disciplinas_dados:
+            print("Nenhuma disciplina registrada ou não há matriculas cadastradas")
+            return
+        print()
+        print("\t - "*10)
+        print("\t\t\t\t\tDISCIPLINAS MAIS PROCURADAS")
+        print("\t - "*10)
+        print("\t{:<40} {:<50}".format('Nome Disciplina', 'Matriculas'))
+        print("\t - "*10)
+        for i in range(min(5, len(disciplinas_dados))):
+            nome, total = disciplinas_dados[i]
+            print("\t{:<40} {:<50}".format(nome, total))
+        print("\t - "*10)
+
+        if len(disciplinas_dados) > 5:
+            print()
+            print("\t - "*10)
+            print("\t\t\t\t\tDISCIPLINAS MENOS PROCURADAS")
+            print("\t - "*10)
+            print("\t{:<40} {:<50}".format('Nome Disciplina', 'Matriculas'))
+            print("\t - "*10)
+        
+            for i in range(max(0, len(disciplinas_dados) - 5), len(disciplinas_dados)):
+                nome, total = disciplinas_dados[i]
+                print("\t{:<40} {:<50}".format(nome, total))
+            print("\t - "*10)
+        elif len(disciplinas_dados) > 0:
+            print("Não há disciplinas suficientes para listar")
+    except pg.Error as e:
+        print(f"Erro a listas disciplinas: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+def relatorio_alunos_por_turma(cursor):
+    id_turma_usuario = -1
+    while id_turma_usuario < 1000:
+        try: 
+            id_turma_usuario = int(input("\nDigite o ID da turma que você quer gerar o relatório: "))
+            if id_turma_usuario < 1000:
+                print("O ID das turmas é um numero entre 1000 e 1039!")
+        except ValueError:
+            print("Entrada Inválida!")
+    try:
+        cursor.execute("""select count(*) from turmas where id_turma = %s;""", (id_turma_usuario,))
+        turma_existe = cursor.fetchone()[0] > 0
+
+        if not turma_existe:
+            print("Erro: turma não encontrada!")
+            return
+        cursor.execute("""select nome_aluno from alunos_da_turma(%s);""", (id_turma_usuario,))
+        alunos_dados = cursor.fetchall()
+
+        print("\t - "*10)
+        print("\t\t\t\t\tAlunos matriculados na turma {}".format(id_turma_usuario))
+        print("\t - "*10)
+        print("\t{:<40} ".format('Nome do Aluno'))
+        print("\t - "*10)
+
+        for aluno in alunos_dados:
+            nome_aluno = aluno[0]
+            print("\t{:<40}".format(nome_aluno))
+        print("\t - "*10)
+
+    except pg.Error as e:
+        print(f"Erro ao gerar lista de alunos na turma: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+def relatorio_grade_horaria_individual(cursor):
+    print("Relatório de Grade Horária Individual\n")
+
+    try:
+        cursor.execute("""SELECT matricula_aluno, nome FROM aluno order by nome;""")
+        alunos = cursor.fetchall()
+
+        if not alunos:
+            print("Nenhum aluno encontrado no sistema.")
+            return
+
+        for aluno in alunos:
+            matricula = aluno[0]
+            nome_aluno = aluno[1]
+            print("\t - " * 10)
+            print("\tGRADE HORÁRIA DO ALUNO => {} {}".format(matricula, nome_aluno))
+            print("\t - " * 10)
+            print("{:<30} {:<15} {:<10} {:<10}".format('Disciplina', 'Dia da Semana', 'Início', 'Fim'))
+
+            cursor.execute("""
+                SELECT nome_disciplina, dia_semana, horario_ini, horario_fim
+                FROM visualizar_grade_horaria(%s);
+            """, (matricula,))
+            grade = cursor.fetchall()
+
+            if not grade:
+                print("Nenhuma disciplina matriculada.")
+            else:
+                for nome, dia, ini, fim in grade:
+                    print("{:<30} {:<15} {:<10} {:<10}".format(nome, dia, str(ini), str(fim)))
+
+            print("\t - " * 10)
+            print()
+
+    except pg.Error as e:
+        print(f"Erro ao gerar o relatório: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
 def main():
 
     conexao = conn()
@@ -396,7 +510,7 @@ def main():
                 print("\tB - Relatório sobre a grade horária individual de cada aluno")
                 print("\tC - Relatório sobre as disciplinas mais e menos procuradas")
                 print("\tD - Relatório sobre as disciplinas com maior indice de reprovação")
-                print("\tE - Relatórios dos alunos aptos para TCC ou Estágio")
+                print("\tE - Relatórios dos alunos aptos para TCC e/ou Estágio")
                 print("\t0 - Voltar")
                 print("\t---" * 10)
                 print()
@@ -405,13 +519,14 @@ def main():
                 print()
 
                 if(opcao == 'A'):
-                    print("Opção escolhida foi A")
+                    relatorio_alunos_por_turma(cursor)
                 elif(opcao == 'B'):
-                    print("Opção escolhida foi B")
+                    relatorio_grade_horaria_individual(cursor)
                 elif(opcao == 'C'):
-                    print("Opção escolhida foi C")
+                    disciplinas_mais_menos_procuradas(cursor)
                 elif(opcao == 'D'):
-                    print("Opção escolhida foi D")
+                    print("Será implementado em reseases futuras!")
+                    break
                 elif(opcao == 'E'):
                     relatorio_alunos_aptos_estagio_tcc(cursor)
                 elif(opcao == '0'):
@@ -425,10 +540,6 @@ def main():
             encerra_conn(conexao)
         else:
             print("Opção inválida, digite novamente...")
-
-    # exibindo o resultado, teriamos que usar fetchall()
-    # for row in rows:
-    # print(row)
 
 if __name__ == "__main__":
     main()
