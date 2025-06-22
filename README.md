@@ -14,6 +14,7 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 
  **link da Apresentação no youtube:** https://www.youtube.com/watch?v=B8dXA444OtU
 * A apresentação foi upada como video não listado no Youtube, porém também está salva no drive
+* **As Webcams estão com um delay para aparecer no início do vídeo, perdão**
 
  **Repositório GitHub:** https://github.com/miguelpaullo/Lab-BD  
 * O convite para ser colaborador foi enviado ao seu email professor, caso deseje verificar os commits e evolução do trabalho
