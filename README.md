@@ -5,9 +5,9 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 
 ## 🚀 Links Importantes
 
-**[Link do projeto no Google Drive]([drive](https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3))**
-**[link da Apresentação no youtube]()**
-**[Link do GitHub]([git](https://github.com/miguelpaullo/Lab-BD))**
+* **[Link do projeto no Google Drive]([drive](https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3))**
+* **[link da Apresentação no youtube]()**
+* **[Link do GitHub]([git](https://github.com/miguelpaullo/Lab-BD))**
 
 ### 📋 Pré-requisitos
 
@@ -74,18 +74,6 @@ Todas as funcionalidade são executadas via linha de comando:
 * Com um menu principal com 6 opções que o usuário pode escolher
 * E também um menu secundário exclusivo para os relatórios, com 6 opções
 
-### ⌨️ E testes de estilo de codificação
-
-Explique que eles verificam esses testes e porquê.
-
-```
-Dar exemplos
-```
-
-## 📦 Implantação
-
-Adicione notas adicionais sobre como implantar isso em um sistema ativo
-
 ## 🛠️ Construído com
 
 * Python
@@ -100,8 +88,6 @@ Adicione notas adicionais sobre como implantar isso em um sistema ativo
 * **Miguel Paulo Rodrigues de Macedo RGA: 2024.1906.011-0** - *Integração Python => Postgres, Geração de dados aleatórios, Código Fonte e Documentação* - [miguelpaullo](https://github.com/miguelpaullo)
 * **Beatriz V. G. da Silva RGA: 2024.1906.071-4** - *Código Fonte e Documentação* - [biavieirakkj](https://github.com/biavieirakkj)
 * **Luciana Nunes Viana RGA: 2024.1906.044-7** - *Código Fonte e Documentação* - [lunah1](https://github.com/lunah1)
-
-Você também pode ver a lista de todos os [colaboradores](https://github.com/usuario/projeto/colaboradores) que participaram deste projeto.
 
 ## 📄 Orientador
 
