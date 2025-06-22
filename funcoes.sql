@@ -112,7 +112,7 @@ BEGIN
     FROM aluno a
     JOIN historico_escolar h ON a.matricula_aluno = h.matricula_aluno
     JOIN disciplina d ON h.codigo_disciplina = d.codigo_disciplina
-    WHERE h.situacao = 'aprovado'
+    WHERE h.situacao = 'Aprovado'
     GROUP BY a.matricula_aluno, a.nome
     HAVING SUM(d.carga_horaria_total) >= p_carga_minima;
 END;
@@ -131,7 +131,7 @@ BEGIN
         SELECT codigo_disciplina
         FROM historico_escolar
         WHERE matricula_aluno = p_matricula_aluno
-          AND situacao = 'aprovado'
+          AND situacao = 'Aprovado'
     );
 END;
 $$ LANGUAGE plpgsql;

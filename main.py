@@ -295,6 +295,38 @@ def disciplinas_recomendadas(cursor):
         print(f"Erro ao buscar recomendações de disciplinas: {e}")
     except Exception as e:
         print(f"ocorreu um erro inesperado: {e}")
+
+def relatorio_alunos_aptos_estagio_tcc(cursor):
+    print("Relatório de Alunos Aptos à TCC ou Estágio\n")
+    carga_minima = -1
+    while carga_minima <= 0:
+        try:
+            carga_minima = int(input("Digite a carga horária mínima necessária para realizar TCC e/ou Estágio: "))
+            if carga_minima <= 0:
+                print("A carga mínima tem que ser um número inteiro positivo")
+        except ValueError:
+            print("Entrada Inválida")
+        
+    try:
+        cursor.execute("""select matricula_aluno, nome_aluno from alunos_aptos_estagio(%s);""", (carga_minima,))
+        alunos_aptos = cursor.fetchall()
+        if not alunos_aptos:
+            print("\nNenhum aluno apto a TCC ou Estágio")
+            return
+        print("\t - "*10)
+        print()
+        print("\tALUNOS APTOS A TCC OU ESTAGIO (Carga horária mínima = {})".format(carga_minima))
+        print("\t - "*10)
+        print("{:<15} {:<40}".format('Matricula', 'Nome do Aluno'))
+        print("\t - "*10)
+        for matricula, nome in alunos_aptos:
+            print("{:<15} {:<40}".format(matricula, nome))
+        print("\t - "*10)
+    except pg.Error as e:
+        print(f"Erro ao gerar relatório: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
 def main():
 
     conexao = conn()
@@ -357,15 +389,16 @@ def main():
             grade_horaria_simulada(cursor)
         elif num == 5:
             while True:
-                print("\tRELATÓRIOS")
-                print("\t--" * 10)
+                print("\t---" * 10)
+                print("\t\t\t\t\tRELATÓRIOS")
+                print("\t---" * 10)
                 print("\tA - Relatório de alunos matriculados em determinada turma")
                 print("\tB - Relatório sobre a grade horária individual de cada aluno")
                 print("\tC - Relatório sobre as disciplinas mais e menos procuradas")
                 print("\tD - Relatório sobre as disciplinas com maior indice de reprovação")
                 print("\tE - Relatórios dos alunos aptos para TCC ou Estágio")
                 print("\t0 - Voltar")
-                print("\t--" * 10)
+                print("\t---" * 10)
                 print()
 
                 opcao = input("Digite a opção desejada: ").upper()
@@ -380,7 +413,7 @@ def main():
                 elif(opcao == 'D'):
                     print("Opção escolhida foi D")
                 elif(opcao == 'E'):
-                    print("Opção escolhida foi E")
+                    relatorio_alunos_aptos_estagio_tcc(cursor)
                 elif(opcao == '0'):
                     print("Opção escolhida foi voltar")
                     print()
