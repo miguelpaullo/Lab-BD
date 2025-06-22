@@ -5,7 +5,7 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 
 ## 🚀 Links Importantes
 
-* **[Link do projeto no Google Drive]((https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3))**
+* **[Link do projeto no Google Drive]((https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3?usp=drive_link)))**
 * **[link da Apresentação no youtube]()**
 * **[Link do GitHub]((https://github.com/miguelpaullo/Lab-BD))**
 
