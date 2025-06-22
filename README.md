@@ -5,17 +5,17 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 
 ## 🚀 Links Importantes
 
-* **Link do projeto no Google Drive:** https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3?usp=drive_link
+ **Link do projeto no Google Drive:** https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3?usp=drive_link
 
 * No drive temos duas pastas com os arquivos executáveis, uma com um banco de dados já povoado e uma com o banco de dados vazio
 * Caso o senhor deseja verificar a funcionalidade de geração de dados com a API Faker, o "Executável com o BD sem dados" deve ser executado
 * Caso execute a pasta "Executavel com BD povoado" a geração de dados será pulada, assim como demonstrado no vídeo
 * Este arquivo também está disponível no drive
 
-* **[link da Apresentação no youtube](https://www.youtube.com/watch?v=B8dXA444OtU)**
+ **link da Apresentação no youtube:** https://www.youtube.com/watch?v=B8dXA444OtU
 * A apresentação foi upada como video não listado no Youtube, porém também está salva no drive
 
-* **Repositório GitHub:** https://github.com/miguelpaullo/Lab-BD  
+ **Repositório GitHub:** https://github.com/miguelpaullo/Lab-BD  
 * O convite para ser colaborador foi enviado ao seu email professor, caso deseje verificar os commits e evolução do trabalho
 * Porém também é possivel verificar a evolução no drive (Artefatos utilizados no trabalho => Backups)
 
