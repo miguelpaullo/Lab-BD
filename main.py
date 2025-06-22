@@ -142,7 +142,7 @@ def fazer_matricula(cursor, conexao):
             #verificar se a turma não está cheia
             if not verificar_turma(cursor, t_id):
                 turmas_disponiveis.append({'id_turma': t_id, 'codigo_disciplina': codigo_disciplina, 'semestre': semestre, 'professor': prof, 'turno': turno, 'local': local, 'capacidade': capacidade})
-                print("- {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(t_id, semestre, prof, turno, local, capacidade))
+                print("\t- {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(t_id, semestre, prof, turno, local, capacidade))
         if not turmas_disponiveis:
             print("Nenhuma turma disponivel no momento, podem estar todas cheias!")
             return
@@ -291,7 +291,7 @@ def disciplinas_recomendadas(cursor):
     """
     Função para gerar a disciplinas recomendadas ao aluno para cursar
     """
-    rga = input("Digite a matrcicula do aluno para ver uma lista de recomendações de disciplinas: ")
+    rga = input("Digite a matricula do aluno para ver uma lista de recomendações de disciplinas: ")
     if not verificar_matricula(cursor, rga):
         print("Erro: Matricula não encontrada")
         print("Não foi possivel visualzar a recomendação de disciplinas")
