@@ -1,0 +1,75 @@
+def relatorio_grade_horaria_individual(cursor):
+    print("Relatório de Grade Horária Individual\n")
+
+    try:
+        cursor.execute("""SELECT DISTINCT matricula_aluno FROM aluno;""")
+        alunos = cursor.fetchall()
+
+        if not alunos:
+            print("Nenhum aluno encontrado no sistema")
+            return
+
+        for aluno in alunos:
+            matricula = aluno[0]
+            print("\t - " * 10)
+            print("\tGRADE HORÁRIA DO ALUNO => {}".format(matricula))
+            print("\t - " * 10)
+            print("{:<30} {:<15} {:<10} {:<10}".format('Disciplina', 'Dia da Semana', 'Início', 'Fim'))
+
+            cursor.execute("""
+                SELECT nome_disciplina, dia_semana, horario_ini, horario_fim
+                FROM visualizar_grade_horaria(%s);
+            """, (matricula,))
+            grade = cursor.fetchall()
+
+            if not grade:
+                print("Nenhuma disciplina matriculada")
+            else:
+                for nome, dia, ini, fim in grade:
+                    print("{:<30} {:<15} {:<10} {:<10}".format(nome, dia, str(ini), str(fim)))
+
+            print("\t - " * 10)
+            print()
+
+    except pg.Error as e:
+        print(f"Erro ao gerar o relatório: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+----------------------------------------------------------
+def relatorio_alunos_por_turma(cursor):
+    print("Relatório de Alunos Matriculados por Turma\n")
+
+    try:
+        id_turma = -1
+        while id_turma < 0:
+            try:
+                id_turma = int(input("Digite o ID da turma: "))
+                if id_turma < 0:
+                    print("Digite um número inteiro válido")
+            except ValueError:
+                print("Entrada inválida")
+
+        cursor.execute("""SELECT nome_aluno FROM alunos_da_turma(%s);""", (id_turma,))
+        alunos = cursor.fetchall()
+
+        if not alunos:
+            print("\nNenhum aluno matriculado nesta turma\n")
+            return
+
+        print("\t - " * 10)
+        print("\n\tALUNOS MATRICULADOS NA TURMA => {}\n".format(id_turma))
+        print("\t - " * 10)
+        print("{:<40}".format('Nomes dos Alunos'))
+        print("\t - " * 10)
+
+        for aluno in alunos:
+            print("{:<40}".format(aluno[0]))
+
+        print("\t - " * 10)
+        print()
+
+    except pg.Error as e:
+        print(f"\nErro ao gerar o relatório: {e}")
+    except Exception as e:
+        print(f"\nOcorreu um erro inesperado: {e}")
