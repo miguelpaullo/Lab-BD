@@ -10,6 +10,9 @@ fake = Faker('pt-BR')
 
 
 def gerar_dados_aleatorios(num_alunos=50, num_disciplinas=20, num_turmas_disciplinas=2):
+    """
+    Essa função gera dados aleatórios que serão inseridos no BD por meio da API Faker e números aleatórios
+    """
     # criando um vetor para armazenar os valores que serão inseridos em alunos
     alunos_dados = []
 
@@ -114,6 +117,9 @@ def gerar_dados_aleatorios(num_alunos=50, num_disciplinas=20, num_turmas_discipl
 
 
 def inserir_dados(conexao, alunos_dados, disciplinas_dados, pre_requisitos_dados, turmas_dados, horarios_dados, matriculas_dados, historico_dados):
+    """
+    Essa função insere os dados gerados com a API faker no banco de dados
+    """
     if conexao is None:
         print("Não foi possível inserir dados")
         return

@@ -17,6 +17,9 @@ def povoar(cursor, tabela):
         return False
 
 def verificar_matricula (cursor, matricula_aluno):
+    """
+    Função para verificar se a matricula existe no BD
+    """
     try:
 
         mat = "select COUNT(*) from aluno where matricula_aluno = %s;"
@@ -29,6 +32,9 @@ def verificar_matricula (cursor, matricula_aluno):
         return False
 
 def verificar_disciplina(cursor, codigo_disciplina):
+    """
+    Função para verificar se o código de disciplina existe no BD
+    """
 
     try:
 
@@ -42,6 +48,10 @@ def verificar_disciplina(cursor, codigo_disciplina):
         return False
 
 def verificar_pre_requisitos(cursor, matricula_aluno, codigo_disciplina):
+    """
+    Função para verificar se uma disciplina tem pré-requisitos
+    """
+
     try:
         cursor.execute("""select codigo_disciplina_pre_requisito from verificar_pre_requisitos(%s, %s);""", (matricula_aluno, codigo_disciplina))
         resultado = cursor.fetchall()
@@ -52,6 +62,9 @@ def verificar_pre_requisitos(cursor, matricula_aluno, codigo_disciplina):
         return []
 
 def verificar_horarios (cursor, matrcicula_aluno, id_turma):
+    """
+    Função para verificar o conflito de horários entre as turmas
+    """
     try:
         cursor.execute("""select verificar_conflito_horario(%s, %s);""", (matrcicula_aluno, id_turma))
         conflito_existe = cursor.fetchone()[0]
@@ -61,6 +74,10 @@ def verificar_horarios (cursor, matrcicula_aluno, id_turma):
         return True
 
 def verificar_turma(cursor, id_turma):
+    """
+    Função para verificar se a turma tem vaga para matricula
+    """
+
     try:
         cursor.execute("""select turma_esta_cheia(%s);""", (id_turma,))
         turma_cheia = cursor.fetchone()[0]
@@ -70,6 +87,10 @@ def verificar_turma(cursor, id_turma):
         return True
 
 def fazer_matricula(cursor, conexao):
+    """
+    Função que utiliza todas as funções acimas para realizar a matricula de fato
+    """
+
     print("Vamos realizar sua matricula simulada\n")
     print("Primeiro vamos verificar se a disciplina escolhida tem pré-requisitos!\n")
     print("Por favor, digite a matricula do aluno: (ex.: 9999999)\n")
@@ -178,6 +199,9 @@ def fazer_matricula(cursor, conexao):
     print("\nProcesso de matricula simulada realizado com sucesso!")
 
 def inserir_novo_aluno(cursor, conexao):
+    """
+    Função para inserir um novo aluno, permite ao usuário cadastrar um novo aluno ao BD
+    """
     print("\tCadastro de novo aluno")
     matricula = ""
     while True:
@@ -230,6 +254,10 @@ def inserir_novo_aluno(cursor, conexao):
         print("Cadastro de aluno não realizado")
 
 def grade_horaria_simulada(cursor):
+    """
+    Função para gerar a grade simulada do aluno
+    """
+
     print("Carregando grade horária simulada...")
     rga = input("\nDigite a Matricula do Aluno: ").strip()
     print()
@@ -260,6 +288,9 @@ def grade_horaria_simulada(cursor):
         print(f"Ocorreu um erro inesperado: {e}")
 
 def disciplinas_recomendadas(cursor):
+    """
+    Função para gerar a disciplinas recomendadas ao aluno para cursar
+    """
     rga = input("Digite a matrcicula do aluno para ver uma lista de recomendações de disciplinas: ")
     if not verificar_matricula(cursor, rga):
         print("Erro: Matricula não encontrada")
@@ -297,6 +328,9 @@ def disciplinas_recomendadas(cursor):
         print(f"ocorreu um erro inesperado: {e}")
 
 def relatorio_alunos_aptos_estagio_tcc(cursor):
+    """
+    Função gera um relatório com todos os alunos aptos a fazer TCC e/ou Estagio a partir de uma carga horária inserida pelo usuário
+    """
     print("Relatório de Alunos Aptos à TCC ou Estágio\n")
     carga_minima = -1
     while carga_minima <= 0:
@@ -317,10 +351,10 @@ def relatorio_alunos_aptos_estagio_tcc(cursor):
         print()
         print("\tALUNOS APTOS A TCC OU ESTAGIO (Carga horária mínima = {})".format(carga_minima))
         print("\t - "*10)
-        print("{:<15} {:<40}".format('Matricula', 'Nome do Aluno'))
+        print("\t{:<15} {:<40}".format('Matricula', 'Nome do Aluno'))
         print("\t - "*10)
         for matricula, nome in alunos_aptos:
-            print("{:<15} {:<40}".format(matricula, nome))
+            print("\t{:<15} {:<40}".format(matricula, nome))
         print("\t - "*10)
     except pg.Error as e:
         print(f"Erro ao gerar relatório: {e}")
@@ -328,6 +362,10 @@ def relatorio_alunos_aptos_estagio_tcc(cursor):
         print(f"Ocorreu um erro inesperado: {e}")
 
 def disciplinas_mais_menos_procuradas(cursor):
+    """
+    Essa função gera um relatório com as disciplinas mais e menos procurados pelos alunos, 
+    utilizando a quantidade de matriculas de cada disciplina como parâmetro
+    """
     print("\tGerando Relatório das disciplinas mais e menos procuradas")
 
     try:
@@ -339,7 +377,7 @@ def disciplinas_mais_menos_procuradas(cursor):
             return
         print()
         print("\t - "*10)
-        print("\t\t\t\t\tDISCIPLINAS MAIS PROCURADAS")
+        print("\t\t\t\tDISCIPLINAS MAIS PROCURADAS")
         print("\t - "*10)
         print("\t{:<40} {:<50}".format('Nome Disciplina', 'Matriculas'))
         print("\t - "*10)
@@ -351,7 +389,7 @@ def disciplinas_mais_menos_procuradas(cursor):
         if len(disciplinas_dados) > 5:
             print()
             print("\t - "*10)
-            print("\t\t\t\t\tDISCIPLINAS MENOS PROCURADAS")
+            print("\t\t\t\tDISCIPLINAS MENOS PROCURADAS")
             print("\t - "*10)
             print("\t{:<40} {:<50}".format('Nome Disciplina', 'Matriculas'))
             print("\t - "*10)
@@ -368,6 +406,9 @@ def disciplinas_mais_menos_procuradas(cursor):
         print(f"Ocorreu um erro inesperado: {e}")
 
 def relatorio_alunos_por_turma(cursor):
+    """
+    Essa função solicita ao usuário o id de uma turma, para mostrar todos os matriculados na mesma
+    """
     id_turma_usuario = -1
     while id_turma_usuario < 1000:
         try: 
@@ -387,7 +428,7 @@ def relatorio_alunos_por_turma(cursor):
         alunos_dados = cursor.fetchall()
 
         print("\t - "*10)
-        print("\t\t\t\t\tAlunos matriculados na turma {}".format(id_turma_usuario))
+        print("\t\t\t\tAlunos matriculados na turma {}".format(id_turma_usuario))
         print("\t - "*10)
         print("\t{:<40} ".format('Nome do Aluno'))
         print("\t - "*10)
@@ -403,6 +444,9 @@ def relatorio_alunos_por_turma(cursor):
         print(f"Ocorreu um erro inesperado: {e}")
 
 def relatorio_grade_horaria_individual(cursor):
+    """
+    Essa função mostra a grade horária individual de cada aluno cadastrado no BD
+    """
     print("Relatório de Grade Horária Individual\n")
 
     try:
@@ -442,6 +486,13 @@ def relatorio_grade_horaria_individual(cursor):
         print(f"Ocorreu um erro inesperado: {e}")
 
 def main():
+
+    """
+    Essa é a função principal do nosso programa, onde ocorre o chamamento de todas as 
+    funções definidas acima, realiza a conexao com o banco utilizando as funçoes definidas
+    no connect.py
+    E utiliza os dados aleatórios gerados no arquivo populando_faker.py
+    """
 
     conexao = conn()
 
@@ -526,6 +577,7 @@ def main():
                     disciplinas_mais_menos_procuradas(cursor)
                 elif(opcao == 'D'):
                     print("Será implementado em reseases futuras!")
+                    print()
                     break
                 elif(opcao == 'E'):
                     relatorio_alunos_aptos_estagio_tcc(cursor)

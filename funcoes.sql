@@ -118,8 +118,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Disciplinas não cursadas ou reprovadas pelo aluno
-CREATE OR REPLACE FUNCTION disciplinas_nao_cursadas_ou_reprovadas(
+-- Disciplinas não cursadas ou reprovadas pelo aluno 
+CREATE OR REPLACE FUNCTION public.disciplinas_nao_cursadas_ou_reprovadas(
     p_matricula_aluno varchar
 )
 RETURNS TABLE(codigo_disciplina varchar, nome_disciplina varchar) AS $$
@@ -128,10 +128,10 @@ BEGIN
     SELECT d.codigo_disciplina, d.nome
     FROM disciplina d
     WHERE d.codigo_disciplina NOT IN (
-        SELECT codigo_disciplina
-        FROM historico_escolar
-        WHERE matricula_aluno = p_matricula_aluno
-          AND situacao = 'Aprovado'
+        SELECT h.codigo_disciplina 
+        FROM historico_escolar h 
+        WHERE h.matricula_aluno = p_matricula_aluno
+          AND h.situacao = 'Aprovado'
     );
 END;
 $$ LANGUAGE plpgsql;
