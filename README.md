@@ -24,9 +24,9 @@ No link do google drive temos duas pastas com os executáveis, uma com o banco d
 O convite para ser colaborador no git foi enviado ao seu email institucional professor!
 Lá você poderá verificar todo o nosso processo de desenvolvimento, porém é possivel acompanhar por meio dos backups no drive
 
-Descrevendo passo a passo:
+**Descrevendo passo a passo:**
 
-No docker:
+**No docker:**
 
 ```
 Levantando o container => docker compose -f postgresql.yml.txt up -d
@@ -34,7 +34,7 @@ Importando o Banco de Dados povoado => docker exec -i meucontainer psql -U postg
 Importando o Banco de Dados sem dados => docker exec -i meucontainer psql -U postgres -d sistemaEscolar < dump.sql
 ```
 
-No VSCode:
+**No VSCode:**
 
 ```
 Tem a possibilidade de clonar o repositório do git ou baixar a pasta do drive e executa-la
@@ -44,7 +44,7 @@ Realizando a instalação da API Faker => pip install faker
 
 ## ⚙️ Executando os testes
 
-No terminal podemos executar o arquivo
+**No terminal podemos executar o arquivo**
 
 ```
 Lembre-se de estar no diretório certo => cd ...
@@ -54,7 +54,7 @@ Se você tiver mais de uma versão do Python instalada pode ser necessário espe
 
 ### 🔩 Principais Funcionalidades
 
-Funcionalidades Implementadas:
+**Funcionalidades Implementadas:**
 
 ```
 Cadastrar novos alunos
@@ -64,7 +64,7 @@ Mostrar disciplinas recomendadas ao usuário se matricular
 Relatórios: alunos matriculados em determinada turma, grade individual de cada aluno cadastrado, disciplinas mais e menos procuradas, alunos aptos a TCC e/ou Estágio
 ```
 
-Funcionalidades Não Implementadas
+**Funcionalidades Não Implementadas**
 
 ```
 Relatório: disciplinas com maior índice de reprovação
