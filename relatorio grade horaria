@@ -1,0 +1,37 @@
+def relatorio_grade_horaria_individual(cursor):
+    print("Relatório de Grade Horária Individual\n")
+
+    try:
+        cursor.execute("""SELECT DISTINCT matricula_aluno FROM aluno;""")
+        alunos = cursor.fetchall()
+
+        if not alunos:
+            print("Nenhum aluno encontrado no sistema.")
+            return
+
+        for aluno in alunos:
+            matricula = aluno[0]
+            print("\t - " * 10)
+            print("\tGRADE HORÁRIA DO ALUNO => {}".format(matricula))
+            print("\t - " * 10)
+            print("{:<30} {:<15} {:<10} {:<10}".format('Disciplina', 'Dia da Semana', 'Início', 'Fim'))
+
+            cursor.execute("""
+                SELECT nome_disciplina, dia_semana, horario_ini, horario_fim
+                FROM visualizar_grade_horaria(%s);
+            """, (matricula,))
+            grade = cursor.fetchall()
+
+            if not grade:
+                print("Nenhuma disciplina matriculada.")
+            else:
+                for nome, dia, ini, fim in grade:
+                    print("{:<30} {:<15} {:<10} {:<10}".format(nome, dia, str(ini), str(fim)))
+
+            print("\t - " * 10)
+            print()
+
+    except pg.Error as e:
+        print(f"Erro ao gerar o relatório: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
