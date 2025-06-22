@@ -3,6 +3,7 @@ from psycopg2 import Error
 from connect import conn, encerra_conn
 from populando_faker import gerar_dados_aleatorios, inserir_dados
 
+
 def verificar_matricula (cursor, matricula_aluno):
     try:
 
@@ -177,7 +178,7 @@ def inserir_novo_aluno(cursor, conexao):
         else:
             break
     
-    nome = "\nDigite o nome completo do aluno: ".strip()
+    nome = input("\nDigite o nome completo do aluno: ").strip()
     while not nome:
         print("\nNome não pode ser vazio")
         nome = "\nDigite o nome completo do aluno: ".strip()
@@ -216,6 +217,72 @@ def inserir_novo_aluno(cursor, conexao):
         print(f"\nOcorreu um erro inesperado ao cadastrar o aluno: {e}")
         print("Cadastro de aluno não realizado")
 
+def grade_horaria_simulada(cursor):
+    print("Carregando grade horária simulada...")
+    rga = input("\nDigite a Matricula do Aluno: ").strip()
+    print()
+    if not verificar_matricula(cursor, rga):
+        print("Erro: Matricula não encontrada")
+        print("Não foi possivel visualzar a grade horária simulada")
+        return
+    try: 
+        cursor.execute("""select nome_disciplina, dia_semana, horario_ini, horario_fim from visualizar_grade_horaria(%s);""", (rga,))
+        grade = cursor.fetchall()
+
+        if not grade:
+            print("O aluno não possui disciplinas matriculadas")
+            return
+        print("\t - "*10)
+        print("\t\t\tGRADE HORÁRIA SIMULADA: RGA => {} ".format(rga))
+        print("\t - "*10)
+        print("\t{:<30} {:<12} {:<15} {:<15} ".format('Disciplina', 'Dia da Semana', 'Início', 'Fim'))
+        print("\t - "*10)
+
+        for nome_dis, dia, hora_I, hora_F in grade:
+            print("\t{:<30} {:<12} {:<15} {:<15} ".format(nome_dis, dia, str(hora_I), str(hora_F)))
+        print("\t - "*10)
+        print()
+    except pg.Error as e:
+        print(f"Erro ao consultar grade horária simulada: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
+
+def disciplinas_recomendadas(cursor):
+    rga = input("Digite a matrcicula do aluno para ver uma lista de recomendações de disciplinas: ")
+    if not verificar_matricula(cursor, rga):
+        print("Erro: Matricula não encontrada")
+        print("Não foi possivel visualzar a recomendação de disciplinas")
+        return
+    recomendacoes = []
+
+    try:
+        cursor.execute("""select codigo_disciplina, nome_disciplina from disciplinas_nao_cursadas_ou_reprovadas(%s);""", (rga,))
+        disciplinas = cursor.fetchall()
+        if not disciplinas:
+            print("O aluno já cursou todas as disciplinas disponiveis ou está cumprindo todos os pré-requisitos no momento")
+            return
+        print("\nForam encontradas {} disciplinas que o aluno não cursou, porém algumas tem pré-requisitos, vou exibir somente as que você pode cursar!".format(len(disciplinas)))
+        for disc, nome_disc in disciplinas:
+            pre_requisitos = verificar_pre_requisitos(cursor, rga, disc)
+            if not pre_requisitos:
+                recomendacoes.append({'codigo': disc, 'nome': nome_disc})
+        if not recomendacoes:
+            print("O aluno não possui disciplinas para matricular no momento, falta cursar os pré-requisitos")
+            return
+        
+        print("\t - "*10)
+        print("\t\t\tDISCIPLINAS RECOMENDADAS RGA => {} ".format(rga))
+        print("\t - "*10)
+        print("\t{:<10} {:<30} ".format('Codigo', 'Nome da Disciplina'))
+        print("\t - "*10)
+
+        for disc in recomendacoes:
+            print("\t{:<10} {:<30}".format(disc['codigo'], disc['nome']))
+        print("\t - "*10)
+    except pg.Error as e:
+        print(f"Erro ao buscar recomendações de disciplinas: {e}")
+    except Exception as e:
+        print(f"ocorreu um erro inesperado: {e}")
 def main():
 
     conexao = conn()
@@ -231,7 +298,6 @@ def main():
     # Exibindo a qual banco de dados estamos conectados
     print("Conectado ao Banco de Dados: ", rows[0])
     print()
-
 
     #Gerando e Inserindo os Dados Aleatórios
     ###########################################################################################################
@@ -251,15 +317,16 @@ def main():
     num = -1
 
     while num != 0:
-        print("\tMenu de Opções")
-        print("\t--" * 10)
+        print("\t---" * 10)
+        print("\t\t\t\t\tMenu de Opções")
+        print("\t---" * 10)
         print("\t1 - Cadastrar novo aluno")
         print("\t2 - Matricula em Turma")
         print("\t3 - Mostrar disciplinas recomendadas para matricula")
         print("\t4 - Apresentar grade horária simulada atual")
         print("\t5 - Relatórios")
         print("\t0 - Encerrar programa")
-        print("\t--" * 10)
+        print("\t---" * 10)
         print()
         
         num = int(input("Digite a opção desejada: "))
@@ -274,9 +341,9 @@ def main():
             print("-"*10)
 
         elif num == 3:
-            print("Mostrando suas disciplinas recomendadas")
+            disciplinas_recomendadas(cursor)
         elif num == 4:
-            print("Sua grade simulada")
+            grade_horaria_simulada(cursor)
         elif num == 5:
             while True:
                 print("\tRELATÓRIOS")
