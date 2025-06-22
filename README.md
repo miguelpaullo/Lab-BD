@@ -6,8 +6,18 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 ## 🚀 Links Importantes
 
 * **Link do projeto no Google Drive:** https://drive.google.com/drive/folders/1Vt2SG8_wW8Xkm1AGNM46SmzwrAI0XIV3?usp=drive_link
-* **[link da Apresentação no youtube]()**
+
+* No drive temos duas pastas com os arquivos executáveis, uma com um banco de dados já povoado e uma com o banco de dados vazio
+* Caso o senhor deseja verificar a funcionalidade de geração de dados com a API Faker, o "Executável com o BD sem dados" deve ser executado
+* Caso execute a pasta "Executavel com BD povoado" a geração de dados será pulada, assim como demonstrado no vídeo
+* Este arquivo também está disponível no drive
+
+* **[link da Apresentação no youtube](https://www.youtube.com/watch?v=B8dXA444OtU)**
+* A apresentação foi upada como video não listado no Youtube, porém também está salva no drive
+
 * **Repositório GitHub:** https://github.com/miguelpaullo/Lab-BD  
+* O convite para ser colaborador foi enviado ao seu email professor, caso deseje verificar os commits e evolução do trabalho
+* Porém também é possivel verificar a evolução no drive (Artefatos utilizados no trabalho => Backups)
 
 ### 📋 Pré-requisitos
 
@@ -21,17 +31,14 @@ O trabalho consiste na modelagem, projeto e construção de um banco de dados re
 
 No link do google drive temos duas pastas com os executáveis, uma com o banco de dados povoado e uma com o banco de dados sem dados, porém a execução será a mesma, com a única diferença que a API Faker será executada na pasta "Executavel com BD sem dados"
 
-O convite para ser colaborador no git foi enviado ao seu email institucional professor!
-Lá você poderá verificar todo o nosso processo de desenvolvimento, porém é possivel acompanhar por meio dos backups no drive
-
 **Descrevendo passo a passo:**
 
 **No docker:**
 
 ```
 Levantando o container => docker compose -f postgresql.yml.txt up -d
-Importando o Banco de Dados povoado => docker exec -i meucontainer psql -U postgres -d sistemaEscolar < trabalho_finalizado_BD.sql
-Importando o Banco de Dados sem dados => docker exec -i meucontainer psql -U postgres -d sistemaEscolar < dump.sql
+Importando o Banco de Dados povoado => docker exec -i meucontainer psql -U postgres -d sistemaEscolar < sistemaEscolar.sql
+Importando o Banco de Dados sem dados => docker exec -i meucontainer psql -U postgres -d sistemaEscolar < sistemaEscolar.sql
 ```
 
 **No VSCode:**
@@ -70,7 +77,8 @@ Relatórios: alunos matriculados em determinada turma, grade individual de cada 
 Relatório: disciplinas com maior índice de reprovação
 ```
 
-Todas as funcionalidade são executadas via linha de comando:
+**Todas as funcionalidade são executadas via linha de comando:**
+
 * Com um menu principal com 6 opções que o usuário pode escolher
 * E também um menu secundário exclusivo para os relatórios, com 6 opções
 
